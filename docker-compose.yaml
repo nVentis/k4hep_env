@@ -1,0 +1,15 @@
+version: "3.4"
+
+services:
+  k4hep:
+    build:
+      context: ./
+      dockerfile: ./k4h_main/Dockerfile
+      target: "${APP_ENV}"
+    privileged: true
+    environment:
+      - APP_ENV
+      - SSH_PUBLIC_KEY
+    restart: always
+    ports:
+      - '22:22'
