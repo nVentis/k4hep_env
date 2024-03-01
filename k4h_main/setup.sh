@@ -22,4 +22,5 @@ if [ $APP_ENV == "prod" ]; then
     mamba install gcc numpy matplotlib seaborn pandas -y
     mamba install pytorch torchvision torchaudio cpuonly -c pytorch -y
     mamba install pyg -c pyg -y
+    yes | pip install normflows
 fi
