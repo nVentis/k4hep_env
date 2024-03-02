@@ -2,6 +2,19 @@
 
 exec /usr/sbin/init &
 
+# Load cvmfs
+echo "Configuring cvmfs"
+if [[ $(uname -r) =~ WSL2$ ]]; then
+    echo "Using WSL2 shim"
+    sudo cvmfs_config wsl2_start
+else
+    echo "Not running in WSL2. Using default setup."
+    sudo cvmfs_config setup
+    sudo service autofs restart
+fi
+
+cvmfs_config probe &
+
 if [ ! -f /.init ] ; then
     # Setup SSH
     echo "Setting up SSH"
@@ -13,19 +26,6 @@ EOF
 
     chmod 700 $HOME/.ssh
     chmod 600 $HOME/.ssh/authorized_keys
-
-    # Setup cvmfs
-    echo "Configuring cvmfs"
-    if [[ $(uname -r) =~ WSL2$ ]]; then
-        echo "Using WSL2 shim"
-        sudo cvmfs_config wsl2_start
-    else
-        echo "Not running in WSL2. Using default setup."
-        sudo cvmfs_config setup
-        sudo service autofs restart
-    fi
-    
-    cvmfs_config probe
 
     # Source key4hep stack
     source /cvmfs/ilc.desy.de/key4hep/setup.sh

@@ -19,7 +19,7 @@ if [ $APP_ENV == "prod" ]; then
     mamba create -n graphjet_pyg python=3.11 -y
     conda activate graphjet_pyg
 
-    mamba install gcc numpy matplotlib seaborn pandas -y
+    mamba install gcc cmake root numpy matplotlib seaborn pandas -y
     mamba install pytorch torchvision torchaudio cpuonly -c pytorch -y
     mamba install pyg -c pyg -y
     yes | pip install normflows
