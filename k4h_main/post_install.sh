@@ -25,8 +25,16 @@ echo "Setting up LCIO"
 mkdir -p $HOME/ILCSoft/LCIO/build
 cd $HOME/ILCSoft/LCIO/build
 
-cmake -DBUILD_ROOTDICT=ON -D CMAKE_CXX_STANDARD=17 ..
+cmake -DBUILD_ROOTDICT=ON ..
 make -j 4 install
+
+# Link sucht that LCIO is available in the python environment
+ln -s /root/ILCSoft/LCIO/build/_deps/sio_extern-src/python $HOME/ILCSoft/LCIO/python
+conda env config vars set LD_LIBRARY_PATH=$HOME/ILCSoft/LCIO/build/lib64
+
+cd ..
+source ./setup.sh
+
 conda deactivate
 
 # BUILD DEPENDENCIES FOR PACKAGES REQUIRING KEY4HEP STAACK
@@ -68,11 +76,11 @@ ${HOME}/DevRepositories/graphjet
 
 EOF
 
+cat >> $HOME/miniforge3/envs/graphjet_pyg/lib/python3.11/site-packages/lcio.pth <<EOF
+${HOME}/ILCSoft/LCIO/python
+
+EOF
+
 # WSL2
 # External datasets
 mkdir -p /nfs/dust/ilc/user/bliewert
-ln -s /nfs/dust/ilc/user/bliewert/jet_training /mnt/
-
-# For GPU functionality of pytorch, use following:
-# conda activate graphjet_pyg
-# mamba install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y

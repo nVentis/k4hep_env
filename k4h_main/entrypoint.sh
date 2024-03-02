@@ -1,6 +1,9 @@
 #!/bin/bash
 
 exec /usr/sbin/init &
+#kill $(ps -ef | grep '[a]utomount' | awk '{print $2}')
+
+sleep 3
 
 # Load cvmfs
 echo "Configuring cvmfs"
@@ -12,6 +15,8 @@ else
     sudo cvmfs_config setup
     sudo service autofs restart
 fi
+
+sleep 3
 
 cvmfs_config probe &
 

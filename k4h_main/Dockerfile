@@ -16,7 +16,7 @@ RUN /setup.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 #CMD ["tail", "-f", "/dev/null"]
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/sshd", "-D", "-e"]
 
 # Build prod image
 FROM base as prod
@@ -26,4 +26,4 @@ RUN /setup.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 #CMD ["tail", "-f", "/dev/null"]
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/sshd", "-D", "-e"]

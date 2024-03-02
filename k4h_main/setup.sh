@@ -5,6 +5,13 @@ sudo yum -y install openssh-server wget nano
 
 mkdir -p /var/run/sshd
 ssh-keygen -A
+rm -rf /run/nologin
+
+# Problems (15s delays) with connecting via SSH on WSL2 can be alleviated with changes to sshd_config
+# Further issues may be related to a weird MTU value, in which case values around MTU=1350 on eth0 might help
+
+sed -i 's/GSSAPIAuthentication yes/GSSAPIAuthentication no/g' /etc/ssh/sshd_config
+sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 
 if [ $APP_ENV == "prod" ]; then
     # Install conda, Python etc.
