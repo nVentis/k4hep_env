@@ -5,9 +5,9 @@ git config --global user.name "Bryan Bliewert"
 
 chmod 0700 ~/.ssh
 chmod 600 $HOME/.ssh/id_rsa
-ssh-add ~/.ssh/id_rsa
-
 eval "$(ssh-agent -s)"
+
+ssh-add ~/.ssh/id_rsa
 
 mkdir -p /nfs/
 
@@ -22,6 +22,9 @@ ln -s /root /afs/desy.de/user/b/bliewert
 conda activate graphjet_pyg
 echo "Setting up LCIO"
 
+mkdir -p $HOME/ILCSoft/LCIO/build
+cd $HOME/ILCSoft/LCIO/build
+
 cmake -DBUILD_ROOTDICT=ON -D CMAKE_CXX_STANDARD=17 ..
 make -j 4 install
 conda deactivate
@@ -32,7 +35,7 @@ source /cvmfs/ilc.desy.de/key4hep/setup.sh
 
 # Physsim
 cd $HOME/ILCSoft
-git clone https://gitlab.desy.de/bryan.bliewert/Physsim.git
+git clone git@gitlab.desy.de:bryan.bliewert/Physsim.git
 
 mkdir -p cd $HOME/ILCSoft/Physsim/build
 cd $HOME/ILCSoft/Physsim/build
@@ -43,9 +46,12 @@ export CPATH=/cvmfs/ilc.desy.de/key4hep/releases/089d775cf2/marlin/1.19/x86_64-c
 export CPATH=/cvmfs/ilc.desy.de/key4hep/releases/2023-05-23/ilcutil/1.7/x86_64-centos7-gcc12.3.0-opt/b3vqf/include:$CPATH
 export CPATH=/cvmfs/ilc.desy.de/key4hep/releases/2023-05-23/root/6.28.04/x86_64-centos7-gcc12.3.0-opt/owni5/include:$CPATH
 
+make
+make install
+
 # Install other depenencies
 cd $HOME/DevRepositories
-git clone https://gitlab.desy.de/bryan.bliewert/graphjet.git
+git clone git@gitlab.desy.de:bryan.bliewert/graphjet.git
 git clone https://github.com/nVentis/ZHH.git
 
 # ZHH
