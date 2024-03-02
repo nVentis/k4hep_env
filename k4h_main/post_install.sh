@@ -41,13 +41,20 @@ conda deactivate
 
 source /cvmfs/ilc.desy.de/key4hep/setup.sh
 
-# Physsim
+# ILCSoft: Physsim, ILDConfig
 cd $HOME/ILCSoft
 git clone git@gitlab.desy.de:bryan.bliewert/Physsim.git
+git clone https://github.com/iLCSoft/ILDConfig.git
 
 mkdir -p cd $HOME/ILCSoft/Physsim/build
 cd $HOME/ILCSoft/Physsim/build
 cmake ..
+
+# Link Physsim for compatability
+ln -s $HOME/ILCSoft/Physsim/lib64 $HOME/ILCSoft/Physsim/lib
+
+# Link ILCSoft for compatability
+ln -s $HOME/ILCSoft /afs/desy.de/user/b/bliewert/public/ILCSoft
 
 # for building Physsim, marlin has to be in CPATH (additional to those added by the key4hep stack)
 export CPATH=/cvmfs/ilc.desy.de/key4hep/releases/089d775cf2/marlin/1.19/x86_64-centos7-gcc12.3.0-opt/d6jkp/include:$CPATH
@@ -81,6 +88,59 @@ ${HOME}/ILCSoft/LCIO/python
 
 EOF
 
-# WSL2
-# External datasets
-mkdir -p /nfs/dust/ilc/user/bliewert
+# MarlinReco (e.g. SLDCorrection)
+cd $HOME/DevRepositories
+git clone https://github.com/iLCSoft/MarlinReco.git
+
+mkdir -p /afs/desy.de/user/b/bliewert/public/yradkhorrami
+ln -s $HOME/ILCSoft/MarlinReco/Analysis/SLDCorrection /afs/desy.de/user/b/bliewert/public/yradkhorrami/SLDecayCorrection
+
+# Build ZHH
+cd $HOME/DevRepositories/ZHH
+source compile_from_scratch.sh
+
+# MEM_HEP dependencies (pytorch_scatter+sparse, pybind11 for JetConvProcessor)
+mkdir $HOME/DevLocal
+ln -s $HOME/DevLocal /afs/desy.de/user/b/bliewert/public/DevLocal
+
+cd $HOME/DevLocal
+
+git clone https://github.com/rusty1s/pytorch_scatter.git
+git clone https://github.com/rusty1s/pytorch_sparse.git
+git clone https://github.com/pybind/pybind11.git
+
+mkdir -p pytorch_scatter/build
+mkdir -p pytorch_sparse/build
+mkdir -p pybind11/build
+
+cd $HOME/DevLocal/pytorch_scatter/build
+cmake -D CMAKE_INSTALL_PREFIX:PATH=/afs/desy.de/user/b/bliewert/public/DevLocal/pytorch_scatter -DCMAKE_PREFIX_PATH="..." ..
+make
+make install
+
+cd $HOME/DevLocal/pytorch_sparse
+git submodule update --init --recursive
+cd build
+cmake -D CMAKE_INSTALL_PREFIX:PATH=/afs/desy.de/user/b/bliewert/public/DevLocal/pytorch_scatter -DCMAKE_PREFIX_PATH="..." ..
+make
+make install
+
+# Pybind11
+cd $HOME/DevLocal/pybind11/build
+cmake -D CMAKE_INSTALL_PREFIX:PATH=/afs/desy.de/user/b/bliewert/public/DevLocal/pybind11 -DCMAKE_PREFIX_PATH="..." ..
+make
+make install
+
+# Compile MEM_HEP processors
+cd $HOME/DevRepositories/MEM_HEP
+source compile_from_scratch.sh
+
+# Link external datasets
+mkdir -p /pnfs/desy.de/ilc/prod/ilc/mc-2020/ild/dst-merged/500-TDR_ws/hh/ILD_l5_o1_v02_nobg
+ln -s /nfs/dust/ilc/user/bliewert/ILD_l5_o1_v02_nobg/v02-02-03 /pnfs/desy.de/ilc/prod/ilc/mc-2020/ild/dst-merged/500-TDR_ws/hh/ILD_l5_o1_v02_nobg/v02-02-03
+
+# TODO: Download lcfiplus weight files
+# In ZHH analysis, weight 6q500_v04_p00_ildl5_c0_bdt.weights.xml is used (as of 2024.03.03)
+cd /afs/desy.de/user/b/bliewert/public/ILCSoft/ILDConfig/LCFIPlusConfig/lcfiweights
+tar -xvzf 6q500_v04_p00_ildl5.tar.gz
+
