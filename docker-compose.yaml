@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.7"
 
 services:
   k4hep:
@@ -10,6 +10,16 @@ services:
     environment:
       - APP_ENV
       - SSH_PUBLIC_KEY
+      - TORCH_GPU_SUPPORT
     restart: always
     ports:
       - '22:22'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ./data:/nfs/dust/ilc/user/bliewert

@@ -55,3 +55,24 @@ git clone git@gitlab.desy.de:bryan.bliewert/graphjet.git
 git clone https://github.com/nVentis/ZHH.git
 
 # ZHH
+
+# Add to envirionment
+# See https://stackoverflow.com/questions/37006114/anaconda-permanently-include-external-packages-like-in-pythonpath
+cat >> $HOME/miniforge3/envs/graphjet_pyg/lib/python3.11/site-packages/MEM_HEP.pth <<EOF
+${HOME}/DevRepositories/MEM_HEP
+
+EOF
+
+cat >> $HOME/miniforge3/envs/graphjet_pyg/lib/python3.11/site-packages/graphjet.pth <<EOF
+${HOME}/DevRepositories/graphjet
+
+EOF
+
+# WSL2
+# External datasets
+mkdir -p /nfs/dust/ilc/user/bliewert
+ln -s /nfs/dust/ilc/user/bliewert/jet_training /mnt/
+
+# For GPU functionality of pytorch, use following:
+# conda activate graphjet_pyg
+# mamba install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y

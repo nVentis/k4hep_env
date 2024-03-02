@@ -20,7 +20,19 @@ if [ $APP_ENV == "prod" ]; then
     conda activate graphjet_pyg
 
     mamba install gcc cmake root numpy matplotlib seaborn pandas -y
-    mamba install pytorch torchvision torchaudio cpuonly -c pytorch -y
+    if [ $TORCH_GPU_SUPPORT == "true" ]; then
+        # Install nvidia container toolkit https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
+        curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | \
+        sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+
+        sudo yum install -y nvidia-container-toolkit
+
+        pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+    else
+        mamba install pytorch torchvision torchaudio cpuonly -c pytorch -y
+    fi
+
+    # For GPU support: 
     mamba install pyg -c pyg -y
     yes | pip install normflows
 fi
