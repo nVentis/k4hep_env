@@ -17,6 +17,11 @@ ln -s /root/DevRepositories /root/public/MarlinWorkdirs
 mkdir -p /afs/desy.de/user/b
 ln -s /root /afs/desy.de/user/b/bliewert
 
+# Link conda environment + Fix permissions
+mkdir -p /nfs/dust/ilc/user/bliewert/.mambaforge/envs
+ln -s ~/miniforge3/envs/graphjet_pyg /nfs/dust/ilc/user/bliewert/.mambaforge/envs/graphjet_pyg
+
+chmod -R 777 /afs/desy.de/user/b/bliewert/public/MarlinWorkdirs/graphjet
 
 # LCIO
 conda activate graphjet_pyg
