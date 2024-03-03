@@ -26,8 +26,11 @@ chmod -R 777 /afs/desy.de/user/b/bliewert/public/MarlinWorkdirs/graphjet
 # Link bashrc
 ln -s /root/.bashrc /afs/desy.de/user/b/bliewert/.zshrc
 
-# LCIO
+# Install additional packages
 conda activate graphjet_pyg
+pip install ipywidgets
+
+# LCIO
 echo "Setting up LCIO"
 
 mkdir -p $HOME/ILCSoft/LCIO/build
