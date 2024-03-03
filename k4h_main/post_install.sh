@@ -23,6 +23,9 @@ ln -s ~/miniforge3/envs/graphjet_pyg /nfs/dust/ilc/user/bliewert/.mambaforge/env
 
 chmod -R 777 /afs/desy.de/user/b/bliewert/public/MarlinWorkdirs/graphjet
 
+# Link bashrc
+ln -s /root/.bashrc /afs/desy.de/user/b/bliewert/.zshrc
+
 # LCIO
 conda activate graphjet_pyg
 echo "Setting up LCIO"
