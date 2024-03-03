@@ -25,7 +25,7 @@ echo "Setting up LCIO"
 mkdir -p $HOME/ILCSoft/LCIO/build
 cd $HOME/ILCSoft/LCIO/build
 
-cmake -DBUILD_ROOTDICT=ON ..
+cmake -DBUILD_ROOTDICT=ON -DCMAKE_CXX_STANDARD=17 ..
 make -j 4 install
 
 # Link sucht that LCIO is available in the python environment
