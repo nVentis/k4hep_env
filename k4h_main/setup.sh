@@ -29,8 +29,7 @@ if [ $APP_ENV == "prod" ]; then
     mamba install gcc cmake root numpy matplotlib seaborn pandas -y
     if [ $TORCH_GPU_SUPPORT == "true" ]; then
         # Install nvidia container toolkit https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
-        curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | \
-        sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+        curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
 
         sudo yum install -y nvidia-container-toolkit
 
