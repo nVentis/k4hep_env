@@ -1,25 +1,51 @@
-version: "3.7"
+version: "3.9"
 
-services:
-  k4hep:
-    build:
+x-base_service: &base_service
+  build:
       context: ./
       dockerfile: ./k4h_main/Dockerfile
       target: "${APP_ENV}"
-    privileged: true
+  privileged: true
+  restart: unless-stopped
+  ports:
+    - '22:22'
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
+  volumes:
+    - ./data:/nfs/dust/ilc/user/bliewert
+
+services:
+  auto: &automatic
+    <<: *base_service
+    profiles: ["auto"]
     environment:
-      - APP_ENV
-      - SSH_PUBLIC_KEY
-      - TORCH_GPU_SUPPORT
-    restart: always
-    ports:
-      - '22:22'
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-    volumes:
-      - ./data:/nfs/dust/ilc/user/bliewert
+      APP_ENV: ${APP_ENV}
+      SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY}
+      PYTH_INSTALL: ${PYTH_INSTALL}
+      PYTH_ENV_INSTALL: ${PYTH_ENV_INSTALL}
+      PYTH_ENV_NAME: ${PYTH_ENV_NAME}
+      PYTH_ENV_VER: ${PYTH_ENV_VER}
+      PYTH_TORCH: ${PYTH_TORCH}
+      PYTH_TORCH_GEOMETRIC: ${PYTH_TORCH_GEOMETRIC}
+      TORCH_GPU_SUPPORT: true
+
+  auto-cpu:
+    <<: *automatic
+    profiles: ["auto-cpu"]
+    deploy: {}
+    environment:
+      APP_ENV: ${APP_ENV}
+      SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY}
+      PYTH_INSTALL: ${PYTH_INSTALL}
+      PYTH_ENV_INSTALL: ${PYTH_ENV_INSTALL}
+      PYTH_ENV_NAME: ${PYTH_ENV_NAME}
+      PYTH_ENV_VER: ${PYTH_ENV_VER}
+      PYTH_TORCH: ${PYTH_TORCH}
+      PYTH_TORCH_GEOMETRIC: ${PYTH_TORCH_GEOMETRIC}
+      TORCH_GPU_SUPPORT: false
+    

@@ -1,66 +1,60 @@
 #!/bin/bash
 
-exec /usr/sbin/init &
-#kill $(ps -ef | grep '[a]utomount' | awk '{print $2}')
-
-sleep 3
-
+# kill $(ps -ef | grep '[a]utomount' | awk '{print $2}')
 # Load cvmfs
+
+# Source env file
+. /root/.env
+
 echo "Configuring cvmfs"
 if [[ $(uname -r) =~ WSL2$ ]]; then
-    echo "Using WSL2 shim"
-    sudo cvmfs_config wsl2_start
+    # sudo cvmfs_config wsl2_start
+    sudo mkdir -p /cvmfs/ilc.desy.de
+    sudo mount -t cvmfs ilc.desy.de /cvmfs/ilc.desy.de
+
+    sudo mkdir -p /cvmfs/sw.hsf.org
+    sudo mount -t cvmfs sw.hsf.org /cvmfs/sw.hsf.org
+
+    sudo mkdir -p /cvmfs/sft.cern.ch
+    sudo mount -t cvmfs sft.cern.ch /cvmfs/sft.cern.ch
 else
-    echo "Not running in WSL2. Using default setup."
+    # exec /usr/sbin/init &
+    # sleep 3
+
     sudo cvmfs_config setup
     sudo service autofs restart
 fi
 
-sleep 3
-
-cvmfs_config probe &
+cvmfs_config probe
 
 if [ ! -f /.init ] ; then
-    # Setup SSH
-    echo "Setting up SSH"
-    touch $HOME/.ssh/authorized_keys
-    cat >> $HOME/.ssh/authorized_keys <<EOF
-$SSH_PUBLIC_KEY
 
-EOF
+    if [ "true" == "false" ]; then
+        # Source key4hep stack
+        source /cvmfs/ilc.desy.de/key4hep/setup.sh
 
-    chmod 700 $HOME/.ssh
-    chmod 600 $HOME/.ssh/authorized_keys
+        # Populate most important tools inside cvmfs cache
+        # See https://gitlab.desy.de/ftx-sft-key4hep/tutorials/-/blob/main/key4hep_installation.md#some-commands-to-populate-parts-of-the-cvmfs-cache
+        gcc --version
+        root-config --version
+        cmake --version
+        python --version
+        Marlin -h
+        ddsim -h
+        ls $lcgeo_DIR
 
-    # Source key4hep stack
-    source /cvmfs/ilc.desy.de/key4hep/setup.sh
+        # Clone main repository
+        cd ~
+        mkdir -p DevRepositories
+        cd DevRepositories
 
-    # Populate most important tools inside cvmfs cache
-    # See https://gitlab.desy.de/ftx-sft-key4hep/tutorials/-/blob/main/key4hep_installation.md#some-commands-to-populate-parts-of-the-cvmfs-cache
-    gcc --version
-    root-config --version
-    cmake --version
-    python --version
-    Marlin -h
-    ddsim -h
-    ls $lcgeo_DIR
-
-    # Clone main repository
-    cd ~
-    mkdir -p DevRepositories
-    cd DevRepositories
-
-    git clone https://github.com/nVentis/MEM_HEP.git
-
-    # Setup ILCSoft
-    cd ~
-    mkdir ILCSoft
-    cd ILCSoft
-
-    git clone https://github.com/iLCSoft/LCIO.git
+        git clone https://github.com/nVentis/MEM_HEP.git
+    fi
 
     # Store result
     touch /.init
+
+    echo "Setup complete"
 fi
 
 # run the command given as arguments from CMD
