@@ -38,7 +38,7 @@ if [ $APP_ENV == "prod" ]; then
         mamba create -n $PYTH_ENV_NAME python=$PYTH_ENV_VER -y
         conda activate $PYTH_ENV_NAME
 
-        mamba install gcc cmake root numpy matplotlib seaborn pandas -y
+        mamba install gcc cmake root numpy matplotlib seaborn pandas law -y
         if [ $PYTH_TORCH == "true" ]; then
             if [ $TORCH_GPU_SUPPORT == "true" ]; then
                 # Install nvidia container toolkit https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
