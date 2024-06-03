@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Link home
+mkdir -p /afs/desy.de/user/b
+ln -s $HOME /afs/desy.de/user/b/bliewert
+
+# Python environment
 conda activate py311
 pip install ipywidgets
 
