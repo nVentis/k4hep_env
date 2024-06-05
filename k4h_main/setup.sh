@@ -80,8 +80,8 @@ EOF
 
     # Setup ILCSoft
     cd ~
-    mkdir ILCSoft
-    cd ILCSoft
+    mkdir -p public/ILCSoft
+    cd public/ILCSoft
 
     git clone https://github.com/iLCSoft/LCIO.git
     git clone https://github.com/iLCSoft/ILDConfig.git
