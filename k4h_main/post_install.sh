@@ -59,7 +59,7 @@ fi
 if [[ $(conda env config vars list) == *"LD_LIBRARY_PATH"* ]]; then
     echo "LD_LIBRARY_PATH already set"
 else
-    conda env config vars set LD_LIBRARY_PATH=$HOME/public/ILCSoft/LCIO/build/lib64
+    conda env config vars set LD_LIBRARY_PATH=$HOME/public/ILCSoft/LCIO/build/lib64:$LD_LIBRARY_PATH
 fi
 
 # Get ILDConfig
