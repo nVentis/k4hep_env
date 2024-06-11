@@ -85,6 +85,7 @@ EOF
 
     git clone https://github.com/iLCSoft/LCIO.git
     git clone https://github.com/iLCSoft/ILDConfig.git
+    git clone https://github.com/iLCSoft/MarlinReco.git
 
 
 
