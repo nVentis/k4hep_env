@@ -18,77 +18,78 @@ rm -rf /run/nologin
 sed -i 's/GSSAPIAuthentication yes/GSSAPIAuthentication no/g' /etc/ssh/sshd_config
 sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 
-if [ $APP_ENV == "prod" ]; then
-    echo "Setting up production environment"
-    
-    if [ $PYTH_INSTALL ]; then
-        # Install conda, Python etc.
-        cd ~
-        wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-        bash Miniforge3-Linux-x86_64.sh -b -p $HOME/miniforge3
-        eval "$($HOME/miniforge3/bin/conda shell.bash hook)"
-        conda init
-        rm -f Miniforge3-Linux-x86_64.sh
-    fi
+echo "Setting up the environment"
 
-    # Setup environment
-    if [ $PYTH_ENV_INSTALL == "true" ]; then
-        echo "Installing Python environment"
+if [[ $PYTH_INSTALL == "true" ]]; then
+    # Install conda, Python etc.
+    cd ~
+    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+    bash Miniforge3-Linux-x86_64.sh -b -p $HOME/miniforge3
+    eval "$($HOME/miniforge3/bin/conda shell.bash hook)"
+    conda init
+    rm -f Miniforge3-Linux-x86_64.sh
+fi
 
-        mamba create -n $PYTH_ENV_NAME python=$PYTH_ENV_VER -y
-        conda activate $PYTH_ENV_NAME
+# Setup environment
+if [[ $PYTH_ENV_INSTALL == "true" ]]; then
+    echo "Installing Python environment"
 
-        mamba install gcc cmake root numpy matplotlib seaborn pandas law -y
-        if [ $PYTH_TORCH == "true" ]; then
-            if [ $TORCH_GPU_SUPPORT == "true" ]; then
-                # Install nvidia container toolkit https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
-                curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+    mamba create -n $PYTH_ENV_NAME python=$PYTH_ENV_VER -y
+    conda activate $PYTH_ENV_NAME
 
-                sudo yum install -y nvidia-container-toolkit
+    mamba install gcc cmake root numpy matplotlib seaborn pandas law -y
+    if [[ $PYTH_TORCH == "true" ]]; then
+        if [[ $TORCH_GPU_SUPPORT == "true" ]]; then
+            # Install nvidia container toolkit https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
+            curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
 
-                pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-            else
-                mamba install pytorch torchvision torchaudio cpuonly -c pytorch -y
-            fi
+            sudo yum install -y nvidia-container-toolkit
 
-            # For PyTorch Geometric support: 
-            if [ $PYTH_TORCH_GEOMETRIC == "true" ]; then
-                mamba install pyg -c pyg -y
-                #yes | pip install normflows
-            fi
+            pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+        else
+            mamba install pytorch torchvision torchaudio cpuonly -c pytorch -y
+        fi
+
+        # For PyTorch Geometric support: 
+        if [[ $PYTH_TORCH_GEOMETRIC == "true" ]]; then
+            mamba install pyg -c pyg -y
+            #yes | pip install normflows
         fi
     fi
+fi
 
-    # Save some config in .bashrc
-    echo "export USE_CVMFS=$USE_CVMFS" >> $HOME/.bashrc
+# Save some config in .bashrc
+echo "export USE_CVMFS=true" >> $HOME/.bashrc
 
-    # Setup SSH
-    echo "Setting up SSH"
-    touch $HOME/.ssh/authorized_keys
-    cat >> $HOME/.ssh/authorized_keys <<EOF
+# Setup SSH
+echo "Setting up SSH"
+touch $HOME/.ssh/authorized_keys
+cat >> $HOME/.ssh/authorized_keys <<EOF
 $SSH_PUBLIC_KEY
 EOF
 
-    chmod 700 $HOME/.ssh
-    chmod 600 $HOME/.ssh/authorized_keys
+chmod 700 $HOME/.ssh
+chmod 600 $HOME/.ssh/authorized_keys
 
-    # Increase CVMFS cache size to 100 GB
-    cat << EOF >> /etc/cvmfs/default.local
-    
-CVMFS_QUOTA_LIMIT=100000
+# Increase CVMFS cache size to 32 GB
+sed 's/^CVMFS_QUOTA_LIMIT=.*/CVMFS_QUOTA_LIMIT=32000/' -i /etc/cvmfs/default.local
+echo 'CVMFS_HTTP_PROXY=DIRECT' >> /etc/cvmfs/default.local
+
+# For setting up ilc.desy.de
+if [[ ! -f "/etc/cvmfs/keys/desy.de/desy.de.pub" ]]; then
+    mkdir -p /etc/cvmfs/keys/desy.de/
+
+    # See https://confluence.desy.de/display/grid/DESY-CVMFS-Repositories_174022946.html
+    wget https://confluence.desy.de/display/grid/attachments/174022946/174022956.pub -O /etc/cvmfs/keys/desy.de/desy.de.pub
+fi
+
+if [[ ! -f "/etc/cvmfs/domain.d/desy.de.conf" ]]; then
+    mkdir -p /etc/cvmfs/domain.d/
+
+    # See https://confluence.desy.de/display/grid/CVMFS-repositories_159747860.html
+    cat >> /etc/cvmfs/domain.d/desy.de.conf <<EOF
+CVMFS_SERVER_URL="http://grid-cvmfs-one.desy.de:8000/cvmfs/@fqrn@"
+CVMFS_KEYS_DIR=/etc/cvmfs/keys/desy.de
+CVMFS_USE_GEOAPI=yes
 EOF
-
-    # Setup ILCSoft
-    cd ~
-    mkdir -p public/ILCSoft
-    cd public/ILCSoft
-
-    git clone https://github.com/iLCSoft/LCIO.git
-    git clone https://github.com/iLCSoft/ILDConfig.git
-    git clone https://github.com/iLCSoft/MarlinReco.git
-    git clone git@gitlab.desy.de:bryan.bliewert/Physsim.git
-
-
-
-
 fi

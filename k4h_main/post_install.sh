@@ -24,6 +24,7 @@ else
 fi
 
 if [ ! -f "$HOME/nfs" ]; then
+    mkdir -p /nfs/dust/ilc/user/bliewert
     ln -s /nfs/dust/ilc/user/bliewert $HOME/nfs
 fi
 

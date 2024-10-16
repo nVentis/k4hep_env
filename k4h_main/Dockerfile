@@ -1,5 +1,6 @@
 # Build base images
-FROM ilcsoft/tutorial:aidacs7 as base
+#FROM ilcsoft/tutorial:aidacs7 as base
+FROM ghcr.io/key4hep/key4hep-images/alma9-cvmfs:latest as base
 
 COPY k4h_main/entrypoint.sh /entrypoint.sh
 COPY k4h_main/setup.sh /setup.sh

@@ -1,5 +1,3 @@
-version: "3.9"
-
 x-base_service: &base_service
   build:
       context: ./
@@ -17,12 +15,12 @@ x-base_service: &base_service
             count: all
             capabilities: [gpu]
   volumes:
-    - ./data:/nfs/dust/ilc/user/bliewert
+    - ./data:/data
 
 services:
-  auto: &automatic
+  auto-gpu: &automatic
     <<: *base_service
-    profiles: ["auto"]
+    profiles: ["auto-gpu"]
     environment:
       APP_ENV: ${APP_ENV}
       SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY}
@@ -32,6 +30,7 @@ services:
       PYTH_ENV_VER: ${PYTH_ENV_VER}
       PYTH_TORCH: ${PYTH_TORCH}
       PYTH_TORCH_GEOMETRIC: ${PYTH_TORCH_GEOMETRIC}
+      K4H_RELEASE: ${K4H_RELEASE}
       TORCH_GPU_SUPPORT: true
 
   auto-cpu:
@@ -39,13 +38,5 @@ services:
     profiles: ["auto-cpu"]
     deploy: {}
     environment:
-      APP_ENV: ${APP_ENV}
-      SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY}
-      PYTH_INSTALL: ${PYTH_INSTALL}
-      PYTH_ENV_INSTALL: ${PYTH_ENV_INSTALL}
-      PYTH_ENV_NAME: ${PYTH_ENV_NAME}
-      PYTH_ENV_VER: ${PYTH_ENV_VER}
-      PYTH_TORCH: ${PYTH_TORCH}
-      PYTH_TORCH_GEOMETRIC: ${PYTH_TORCH_GEOMETRIC}
       TORCH_GPU_SUPPORT: false
     
