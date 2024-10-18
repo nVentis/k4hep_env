@@ -2,3 +2,5 @@
 *
 # Except this file
 !.gitignore
+!entrypoint_setup.sh
+!entrypoint_run.sh

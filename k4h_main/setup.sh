@@ -58,9 +58,6 @@ if [[ $PYTH_ENV_INSTALL == "true" ]]; then
     fi
 fi
 
-# Save some config in .bashrc
-echo "export USE_CVMFS=true" >> $HOME/.bashrc
-
 # Setup SSH
 echo "Setting up SSH"
 touch $HOME/.ssh/authorized_keys
@@ -73,23 +70,3 @@ chmod 600 $HOME/.ssh/authorized_keys
 
 # Increase CVMFS cache size to 32 GB
 sed 's/^CVMFS_QUOTA_LIMIT=.*/CVMFS_QUOTA_LIMIT=32000/' -i /etc/cvmfs/default.local
-echo 'CVMFS_HTTP_PROXY=DIRECT' >> /etc/cvmfs/default.local
-
-# For setting up ilc.desy.de
-if [[ ! -f "/etc/cvmfs/keys/desy.de/desy.de.pub" ]]; then
-    mkdir -p /etc/cvmfs/keys/desy.de/
-
-    # See https://confluence.desy.de/display/grid/DESY-CVMFS-Repositories_174022946.html
-    wget https://confluence.desy.de/display/grid/attachments/174022946/174022956.pub -O /etc/cvmfs/keys/desy.de/desy.de.pub
-fi
-
-if [[ ! -f "/etc/cvmfs/domain.d/desy.de.conf" ]]; then
-    mkdir -p /etc/cvmfs/domain.d/
-
-    # See https://confluence.desy.de/display/grid/CVMFS-repositories_159747860.html
-    cat >> /etc/cvmfs/domain.d/desy.de.conf <<EOF
-CVMFS_SERVER_URL="http://grid-cvmfs-one.desy.de:8000/cvmfs/@fqrn@"
-CVMFS_KEYS_DIR=/etc/cvmfs/keys/desy.de
-CVMFS_USE_GEOAPI=yes
-EOF
-fi
