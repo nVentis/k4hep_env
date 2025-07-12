@@ -20,53 +20,17 @@ sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 
 echo "Setting up the environment"
 
-if [[ $PYTH_INSTALL == "true" ]]; then
-    # Install conda, Python etc.
-    cd ~
-    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-    bash Miniforge3-Linux-x86_64.sh -b -p $HOME/miniforge3
-    eval "$($HOME/miniforge3/bin/conda shell.bash hook)"
-    conda init
-    rm -f Miniforge3-Linux-x86_64.sh
-fi
-
-# Setup environment
-if [[ $PYTH_ENV_INSTALL == "true" ]]; then
-    echo "Installing Python environment"
-
-    mamba create -n $PYTH_ENV_NAME python=$PYTH_ENV_VER -y
-    conda activate $PYTH_ENV_NAME
-
-    mamba install gcc cmake root numpy matplotlib seaborn pandas law -y
-    if [[ $PYTH_TORCH == "true" ]]; then
-        if [[ $TORCH_GPU_SUPPORT == "true" ]]; then
-            # Install nvidia container toolkit https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
-            curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
-
-            sudo yum install -y nvidia-container-toolkit
-
-            pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-        else
-            mamba install pytorch torchvision torchaudio cpuonly -c pytorch -y
-        fi
-
-        # For PyTorch Geometric support: 
-        if [[ $PYTH_TORCH_GEOMETRIC == "true" ]]; then
-            mamba install pyg -c pyg -y
-            #yes | pip install normflows
-        fi
-    fi
-fi
-
 # Setup SSH
-echo "Setting up SSH"
-touch $HOME/.ssh/authorized_keys
-cat >> $HOME/.ssh/authorized_keys <<EOF
+if [ ! -z $SSH_PUBLIC_KEY ]; then
+    echo "Setting up SSH"
+    touch $HOME/.ssh/authorized_keys
+    cat >> $HOME/.ssh/authorized_keys <<EOF
 $SSH_PUBLIC_KEY
 EOF
 
-chmod 700 $HOME/.ssh
-chmod 600 $HOME/.ssh/authorized_keys
+    chmod 700 $HOME/.ssh
+    chmod 600 $HOME/.ssh/authorized_keys
+fi
 
 # Increase CVMFS cache size to 32 GB
 sed 's/^CVMFS_QUOTA_LIMIT=.*/CVMFS_QUOTA_LIMIT=32000/' -i /etc/cvmfs/default.local

@@ -15,15 +15,8 @@ ls $lcgeo_DIR
 
 # Clone main repository
 mkdir -p ~/public/DevRepositories
-mkdir -p ~/public/ILCSoft/
 mkdir -p ~/public/MarlinWorkdirs/
 
-cd ~/public/ILCSoft
-git clone https://github.com/iLCSoft/LCIO.git
-git clone https://github.com/iLCSoft/ILDConfig.git
-git clone https://github.com/iLCSoft/MarlinReco.git
-#git clone git@gitlab.desy.de:bryan.bliewert/Physsim.git
-
 # Setup ZHH
-cd ~/public/MarlinWorkdirs
-git clone --recurse-submodules https://github.com/nVentis/ZHH.git
+#cd ~/public/MarlinWorkdirs
+#git clone --recurse-submodules https://github.com/nVentis/ZHH.git
