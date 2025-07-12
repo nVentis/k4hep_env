@@ -21,7 +21,7 @@ sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 echo "Setting up the environment"
 
 # Setup SSH
-if [ ! -z $SSH_PUBLIC_KEY ]; then
+if [ ! -z "$SSH_PUBLIC_KEY" ]; then
     echo "Setting up SSH"
     touch $HOME/.ssh/authorized_keys
     cat >> $HOME/.ssh/authorized_keys <<EOF

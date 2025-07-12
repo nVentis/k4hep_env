@@ -1,14 +1,18 @@
-# Build base images
 #FROM ilcsoft/tutorial:aidacs7 as base
 FROM ghcr.io/key4hep/key4hep-images/alma9-cvmfs:latest as base
 
 COPY k4h_main/entrypoint.sh /entrypoint.sh
 COPY k4h_main/setup.sh /setup.sh
 COPY .env /root/.env
-#ENV DEBIAN_FRONTEND=noninteractive
 
 RUN chmod a+x /entrypoint.sh
 RUN chmod a+x /setup.sh
+#ENV DEBIAN_FRONTEND=noninteractive
+RUN mkdir -p /data
+COPY data/entrypoint_run.sh /data/entrypoint_run.sh
+COPY data/entrypoint_setup.sh /data/entrypoint_setup.sh
+RUN chmod a+x /data/entrypoint_run.sh
+RUN chmod a+x /data/entrypoint_setup.sh
 
 # Build dev image
 FROM base as dev

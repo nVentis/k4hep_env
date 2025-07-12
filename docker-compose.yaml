@@ -1,7 +1,7 @@
 x-base_service: &base_service
   build:
       context: ./
-      dockerfile: ./k4h_main/Dockerfile
+      dockerfile: ./Dockerfile
       target: "${APP_ENV}"
   privileged: true
   restart: unless-stopped
