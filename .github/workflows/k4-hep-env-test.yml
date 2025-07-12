@@ -6,6 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Set up key4hep
     steps:
+      # Checkout the repo
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+        repository: ${{ github.repository }}'
+
       - name: Hello world action step
         id: hello
         uses: ./.github/actions/k4-hep-env-test
