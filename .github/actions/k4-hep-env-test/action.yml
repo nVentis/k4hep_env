@@ -2,10 +2,10 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  post-cmd:  # id of input
+    description: 'End-of-build command'
     required: true
-    default: 'World'
+    default: 'ls /cvmfs/sw.hsf.org'
 outputs:
   time: # id of output
     description: 'The time we greeted you'
@@ -13,4 +13,4 @@ runs:
   using: 'docker'
   image: '../../../Dockerfile'
   args:
-    - ${{ inputs.who-to-greet }}
+    - ${{ inputs.post-cmd }}
