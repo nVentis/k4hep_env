@@ -9,7 +9,8 @@ jobs:
       # Checkout the repo
       - name: Checkout current repo
         uses: actions/checkout@v4
-        repository: ${{ github.repository }}'
+        with:
+          repository: ${{ github.repository }}'
 
       - name: Hello world action step
         id: hello
