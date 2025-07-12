@@ -2,15 +2,15 @@ name: Key4hep Setup Test
 on: [push]
 
 jobs:
-  hello_world_job:
+  key4hep_setup_job:
     runs-on: ubuntu-latest
     name: Set up key4hep
     steps:
       - name: Hello world action step
         id: hello
-        uses: actions/k4-hep-env-test@v2
+        uses: ./.github/actions/k4-hep-env-test
         with:
-          who-to-greet: 'Mona the Octocat'
+          an-input: 'KEY4HEP-VERSION'
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
