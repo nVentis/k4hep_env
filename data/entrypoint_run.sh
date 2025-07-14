@@ -56,12 +56,18 @@ do
         echo "Trying to mount repo <$repo>"
 
         if [[ ! -d "/cvmfs/$repo" || -z "$( ls -A "/cvmfs/$repo" )" ]]; then
-            failed=1
-
             mkdir -p /cvmfs/$repo
             mount -t cvmfs $repo /cvmfs/$repo
 
-            echo "Mounted repo <$repo>"
+            sleep 2
+
+            if [[ -d "/cvmfs/$repo" && ! -z "$( ls -A "/cvmfs/$repo" )" ]];
+                echo "Mounted repo <$repo>"
+            else
+                failed=1
+                echo "Could not mount repo <$repo>. Trying again..."
+            fi
+
         else
             echo "Repo <$repo> already mounted"
         fi
