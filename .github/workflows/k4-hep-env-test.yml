@@ -2,19 +2,20 @@ name: Key4hep Setup Test
 on: [push]
 
 jobs:
-  key4hep_setup_job:
+  clone-repo-job:
     runs-on: ubuntu-latest
-    name: Set up key4hep
     steps:
       # Checkout the repo
       - name: Checkout current repo
         uses: actions/checkout@v4
 
-      - name: Hello world action step
-        id: hello
-        uses: ./.github/actions/k4-hep-env-test
-        with:
-          an-input: 'KEY4HEP-VERSION'
+  key4hep-setup-job:
+    needs: clone-repo-job
+    container:
+      image: '../../Dockerfile'
+      options: --privileged
+
+    steps:
       # Use the output from the `hello` step
       - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+        run: (ls /.dockerenv && echo Found dockerenv && echo "$(ls /cvmfs)") || (echo No dockerenv)
