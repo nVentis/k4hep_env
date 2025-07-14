@@ -21,9 +21,9 @@ RUN dnf -y install autofs
 FROM base as dev
 ENV APP_ENV=dev
 
-#RUN /setup.sh
-RUN touch /.init
-RUN echo "echo Test" > /data/entrypoint_run.sh
+RUN /setup.sh
+#RUN touch /.init
+#RUN echo "echo Test" > /data/entrypoint_run.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["tail", "-f", "/dev/null"]
@@ -33,9 +33,9 @@ CMD ["tail", "-f", "/dev/null"]
 FROM base as prod
 ENV APP_ENV=prod
 
-#RUN /setup.sh
-RUN touch /.init
-RUN echo "echo Test" > /data/entrypoint_run.sh
+RUN /setup.sh
+#RUN touch /.init
+#RUN echo "echo Test" > /data/entrypoint_run.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["tail", "-f", "/dev/null"]
