@@ -12,11 +12,3 @@ python --version
 Marlin -h
 ddsim -h
 ls $lcgeo_DIR
-
-# Clone main repository
-mkdir -p ~/public/DevRepositories
-mkdir -p ~/public/MarlinWorkdirs/
-
-# Setup ZHH
-#cd ~/public/MarlinWorkdirs
-#git clone --recurse-submodules https://github.com/nVentis/ZHH.git

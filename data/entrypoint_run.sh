@@ -61,7 +61,7 @@ do
 
             sleep 2
 
-            if [[ -d "/cvmfs/$repo" && ! -z "$( ls -A "/cvmfs/$repo" )" ]];
+            if [[ -d "/cvmfs/$repo" && ! -z "$( ls -A "/cvmfs/$repo" )" ]]; then
                 echo "Mounted repo <$repo>"
             else
                 failed=1

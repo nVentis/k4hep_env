@@ -2,9 +2,8 @@
 
 This docker compose file sets up a local container running alma9 and cvmfs with ilc.desy.de and sw.hsf.org enabled. Tested on Ubuntu 24 and WSL2. 
 
-# Setup
+# Running
 
-1. Adjust the `.env` file and fill in your own `SSH_PUBLIC_KEY`
-2. `docker compose --profile auto-<cpu/gpu> up`. Choose `auto-gpu` if you want to passthrough a local NVIDIA gpu, `auto-cpu` otherwise.  
-3. Profit
+Execute the following command to build and run the container: `docker compose --profile auto-<cpu/gpu> -e=PRELOAD_CVMFS=<true/false> up`. Choose `auto-gpu` if you want to passthrough a local NVIDIA gpu, `auto-cpu` otherwise. The environment variable option `PRELOAD_CVMFS` will default to `false` if not supplied (see .env). 
+
 

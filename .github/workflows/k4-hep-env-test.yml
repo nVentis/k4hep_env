@@ -2,7 +2,7 @@ name: Key4hep Setup Test
 on: [push]
 
 jobs:
-  clone-repo-job:
+  prepare-container:
     runs-on: ubuntu-latest
     steps:
       # Checkout the repo
@@ -12,5 +12,9 @@ jobs:
       - name: Build docker image
         run: docker compose build auto-cpu
 
-      - name: Test output
-        run: docker compose run auto-cpu --entrypoint "which Marlin"
+  test-marlin:
+    runs-on: ubuntu-latest
+    needs: prepare-container
+    steps:
+      - name: Check Marlin -h
+        run: docker compose run auto-cpu "/data/test_marlin.sh"

@@ -1,6 +1,8 @@
 # Ignore everything in this directory
 *
 # Except this file
+!tests
 !.gitignore
 !entrypoint_setup.sh
 !entrypoint_run.sh
+!tests/test_marlin.sh

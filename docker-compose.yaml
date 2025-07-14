@@ -25,6 +25,7 @@ services:
       APP_ENV: ${APP_ENV}
       SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY}
       K4H_RELEASE: ${K4H_RELEASE}
+      PRELOAD_CVMFS: ${PRELOAD_CVMFS}
       TORCH_GPU_SUPPORT: true
 
   auto-cpu:
