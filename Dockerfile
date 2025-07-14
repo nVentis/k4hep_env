@@ -14,11 +14,16 @@ COPY data/entrypoint_setup.sh /data/entrypoint_setup.sh
 RUN chmod a+x /data/entrypoint_run.sh
 RUN chmod a+x /data/entrypoint_setup.sh
 
+RUN yum -y update && yum -y install openssh-server wget nano tree pv htop
+RUN dnf -y install autofs
+
 # Build dev image
 FROM base as dev
 ENV APP_ENV=dev
 
-RUN /setup.sh
+#RUN /setup.sh
+RUN touch /.init
+RUN echo "echo Test" > /data/entrypoint_run.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["tail", "-f", "/dev/null"]
@@ -28,7 +33,9 @@ CMD ["tail", "-f", "/dev/null"]
 FROM base as prod
 ENV APP_ENV=prod
 
-RUN /setup.sh
+#RUN /setup.sh
+RUN touch /.init
+RUN echo "echo Test" > /data/entrypoint_run.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["tail", "-f", "/dev/null"]

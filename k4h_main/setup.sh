@@ -1,9 +1,6 @@
 #!/bin/bash
 
 # Setup remote SSH access
-yum -y update
-yum -y install openssh-server wget nano tree pv htop
-
 mkdir -p $HOME/.ssh
 mkdir -p /var/run/sshd
 ssh-keygen -A
