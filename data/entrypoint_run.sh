@@ -43,7 +43,8 @@ do
         # exec /usr/sbin/init &
         # sleep 3
 
-        service autofs restart
+        #service autofs restart
+        echo "Doing nothing for non-WSL2 system"
     fi
 
     sleep 2
