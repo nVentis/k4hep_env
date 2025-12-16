@@ -1,0 +1,24 @@
+on: [push, pull_request]
+
+jobs:
+  list-cvmfs:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/key4hep/key4hep-images/alma9-cvmfs
+      volumes:
+        - /cvmfs:/cvmfs
+      options: --privileged
+    steps:
+      # Mandatory step
+      - name: Set up cvmfs
+        run: /mount.sh
+      - name: List contents of /cvmfs
+        run: ls -l /cvmfs/sw.hsf.org/
+      - name: Clone ZHH repo
+        run: git clone https://github.com/ILDAnaSoft/ZHH.git ZHH
+      - name: Source key4hep release
+        run: cd ZHH && source install.sh --auto
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: ZHH/source/build # or path/to/artifact

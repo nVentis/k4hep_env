@@ -1,5 +1,5 @@
 name: Key4hep Setup Test
-on: [push]
+on: []
 
 jobs:
   prepare-container:

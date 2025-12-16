@@ -3,11 +3,11 @@
 # Source env file
 . /root/.env
 
-source /data/entrypoint_run.sh
+source /root/entrypoint_run.sh
 
 if [[ ! -f /.init ]]; then
     if [[ "$PRELOAD_CVMFS" == "true" ]]; then
-        source /data/entrypoint_setup.sh
+        source /root/entrypoint_setup.sh
     fi
 
     # Load environment variables in every (login) shell
@@ -19,4 +19,5 @@ if [[ ! -f /.init ]]; then
 fi
 
 # run the command given as arguments from CMD
+echo "Command: $@"
 exec "$@"
