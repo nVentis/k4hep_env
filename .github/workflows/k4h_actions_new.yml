@@ -16,7 +16,7 @@ jobs:
         run: ls -l /cvmfs/sw.hsf.org/
       - name: Print cwd
         run: echo $GITHUB_WORKSPACE
-      - name: Clone ZHH repo
+      - name: Clone and build ZHH with dependencies
         run: |
           git clone https://github.com/ILDAnaSoft/ZHH.git ZHH
           cd ZHH
