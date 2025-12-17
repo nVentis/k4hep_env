@@ -14,11 +14,17 @@ jobs:
         run: /mount.sh
       - name: List contents of /cvmfs
         run: ls -l /cvmfs/sw.hsf.org/
+      - name: Print cwd
+        run: echo $GITHUB_WORKSPACE
       - name: Clone ZHH repo
-        run: git clone https://github.com/ILDAnaSoft/ZHH.git ZHH
-      - name: Source key4hep release
-        run: cd ZHH && source install.sh --auto
+        run: |
+          git clone https://github.com/ILDAnaSoft/ZHH.git ZHH
+          cd ZHH
+          source install.sh --auto
+          cd $GITHUB_WORKSPACE
       - uses: actions/upload-artifact@v4
         with:
           name: my-artifact
-          path: ZHH/source/build # or path/to/artifact
+          path: |
+            ZHH/source/lib
+            ZHH/source/bin
