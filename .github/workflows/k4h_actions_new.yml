@@ -21,6 +21,7 @@ jobs:
           git clone https://github.com/ILDAnaSoft/ZHH.git ZHH
           ls -la
           cd ZHH
+          ls -la
           source install.sh --auto
           cd $GITHUB_WORKSPACE
       - uses: actions/upload-artifact@v4
