@@ -19,6 +19,7 @@ jobs:
       - name: Clone ZHH repo
         run: |
           git clone https://github.com/ILDAnaSoft/ZHH.git ZHH
+          ls -la
           cd ZHH
           source install.sh --auto
           cd $GITHUB_WORKSPACE
