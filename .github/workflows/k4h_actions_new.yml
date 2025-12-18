@@ -55,8 +55,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           file: "./Dockerfile"
-          allow:
-          - 'security.insecure'
+          allow: "security.insecure"
       
       # This step generates an artifact attestation for the image, which is an unforgeable statement about
       # where and how it was built. It increases supply chain security for people who consume the image. For
