@@ -12,8 +12,8 @@ RUN echo "Mounting CVMFS" \
     bash /mount.sh \
     echo "Checking key4hep whether exists..." \
     [ -d /cvmfs/sw.hsf.org/key4hep ] && echo "key4hep found. Cloning ZHH repo..." || exit 1 \
-    cd $GITHUB_WORKSPAC && git clone https://github.com/ILDAnaSoft/ZHH.git ZHH
-RUN ZHH && echo "Building image with $(nproc) cores..." && bash install.sh --auto
+    cd $GITHUB_WORKSPACE && git clone https://github.com/ILDAnaSoft/ZHH.git \
+    cd ZHH && echo "Building image with $(nproc) cores..." && bash install.sh --auto
 
 ENTRYPOINT ["/mount.sh"]
 CMD ["/bin/bash"]
