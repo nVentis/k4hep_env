@@ -27,6 +27,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
+          # https://github.com/docker/buildx/issues/2683
           buildkitd-flags: "--allow-insecure-entitlement security.insecure"
         
       - name: Log in to the Container registry
